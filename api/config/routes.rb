@@ -1,3 +1,7 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  get "/users/signed_in" => "users#signed_in"
+  post "/users/sign_up" => "users#sign_up"
+  post "/users/sign_in" => "users#sign_in"
+  delete "users/sign_out" => "users#sign_out"
+  resources :books, only: [:index, :show, :create, :update, :destroy]
 end
