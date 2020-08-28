@@ -1,6 +1,12 @@
 class BooksController < ApplicationController
 
     def index
+        if params[:id]
+            @books = Book.where(user_id: params[:id])
+        else
+            @books = Book.all
+        end
+        render json: {books: @books}
     end
 
     def show

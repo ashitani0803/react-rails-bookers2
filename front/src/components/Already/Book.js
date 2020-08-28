@@ -4,8 +4,7 @@ import axios from "axios"
 import BookForm from "./BookForm"
 
 function Book(props) {
-    const [title, setTitle] = useState("")
-    const [body, setBody] = useState("")
+    const [book, setBook] = useState({})
 
     const { id } = useParams()
 
@@ -17,8 +16,7 @@ function Book(props) {
                 })
                 .then((resp) => {
                     console.log(resp)
-                    setTitle(resp.data.book.title)
-                    setBody(resp.data.book.body)
+                    setBook(resp.data.book)
                 })
                 .catch((resp) => {
                     console.log("get book error", resp)
@@ -34,8 +32,8 @@ function Book(props) {
                 <tbody>
                     <tr>
                         <td>{props.currentUser.name}</td>
-                        <td>{title}</td>
-                        <td>{body}</td>
+                        <td>{book.title}</td>
+                        <td>{book.body}</td>
                     </tr>
                 </tbody>
             </table>
