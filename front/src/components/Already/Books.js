@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import axios from "axios"
 import BookForm from "./BookForm"
+import UserInfo from "./UserInfo"
 
-function Books() {
+function Books(props) {
     const [books, setBooks] = useState([])
+    const [user, SetUser] = useState({})
 
     const { id } = useParams()
 
@@ -25,6 +27,7 @@ function Books() {
                 .then((resp) => {
                     console.log(resp)
                     setBooks(resp.data.books)
+                    SetUser(resp.data.user)
                 })
                 .catch((resp) => {
                     console.log("get boks error", resp)
@@ -46,6 +49,19 @@ function Books() {
 
     return (
         <div>
+            {user === undefined ? (
+                <UserInfo
+                    userId={props.userInfo.id}
+                    userName={props.userInfo.name}
+                    userIntroduction={props.userInfo.introduction}
+                />
+            ) : (
+                <UserInfo
+                    userId={user.id}
+                    userName={user.name}
+                    userIntroduction={user.introduction}
+                />
+            )}
             <BookForm />
             <table>
                 <thead>

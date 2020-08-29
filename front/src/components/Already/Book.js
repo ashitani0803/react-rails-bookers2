@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import axios from "axios"
 import BookForm from "./BookForm"
+import UserInfo from "./UserInfo"
 
-function Book(props) {
+function Book() {
     const [book, setBook] = useState({})
+    const [user, setUser] = useState({})
 
     const { id } = useParams()
 
@@ -17,6 +19,7 @@ function Book(props) {
                 .then((resp) => {
                     console.log(resp)
                     setBook(resp.data.book)
+                    setUser(resp.data.user)
                 })
                 .catch((resp) => {
                     console.log("get book error", resp)
@@ -27,11 +30,16 @@ function Book(props) {
 
     return (
         <div>
+            <UserInfo
+                userId={user.id}
+                userName={user.name}
+                userIntroduction={user.introduction}
+            />
             <BookForm />
             <table>
                 <tbody>
                     <tr>
-                        <td>{props.currentUser.name}</td>
+                        <td>{user.name}</td>
                         <td>{book.title}</td>
                         <td>{book.body}</td>
                     </tr>

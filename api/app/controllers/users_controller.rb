@@ -5,10 +5,14 @@ class UsersController < ApplicationController
         render json: {users: @users}
     end
 
-    def edit
-    end
-
     def update
+        p params[:id]
+        @user = User.find(params[:id])
+        if @user.update(user_update_params)
+            render json: {user: @user}
+        else
+            render json: {error: @user.errors.messages}
+        end
     end
 
     def sign_in
@@ -53,5 +57,9 @@ class UsersController < ApplicationController
 
     def sign_up_params
         params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    end
+
+    def user_update_params
+        params.require(:user).permit(:name, :introduction)
     end
 end

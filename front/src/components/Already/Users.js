@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import axios from "axios"
 import BookForm from "./BookForm"
+import UserInfo from "./UserInfo"
 
-function Users() {
+function Users(props) {
     const [users, setUsers] = useState([])
 
     useEffect(() => {
@@ -37,6 +38,11 @@ function Users() {
 
     return (
         <div>
+            <UserInfo
+                userId={props.userInfo.id}
+                userName={props.userInfo.name}
+                userIntroduction={props.userInfo.introduction}
+            />
             <BookForm />
             <table>
                 <thead>

@@ -10,6 +10,7 @@ import SignIn from "./components/Welcome/SignIn"
 import Users from "./components/Already/Users"
 import Books from "./components/Already/Books"
 import Book from "./components/Already/Book"
+import UserForm from "./components/Already/UserForm"
 import axios from "axios"
 
 function App(props) {
@@ -68,14 +69,28 @@ function App(props) {
                         <Route
                             exact
                             path='/users/:id'
-                            component={Books}
+                            render={() => <Books userInfo={currentUser} />}
                         ></Route>
-                        <Route exact path='/users' component={Users}></Route>
-                        <Route exact path='/books' component={Books}></Route>
                         <Route
                             exact
-                            path='/books/:id'
-                            render={() => <Book currentUser={currentUser} />}
+                            path='/users'
+                            render={() => <Users userInfo={currentUser} />}
+                        ></Route>
+                        <Route
+                            exact
+                            path='/books'
+                            render={() => <Books userInfo={currentUser} />}
+                        ></Route>
+                        <Route exact path='/books/:id' component={Book}></Route>
+                        <Route
+                            exact
+                            path='/users/:id/edit'
+                            render={() => (
+                                <UserForm
+                                    currentUser={currentUser}
+                                    setCurrentUser={setCurrentUser}
+                                />
+                            )}
                         ></Route>
                     </Switch>
                 ) : (
