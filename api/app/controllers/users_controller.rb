@@ -1,5 +1,15 @@
 class UsersController < ApplicationController
     before_action :current_user, only: [:signed_in]
+    def index
+        @users = User.all
+        render json: {users: @users}
+    end
+
+    def edit
+    end
+
+    def update
+    end
 
     def sign_in
         @user = User.find_by(name: sign_in_params[:name])

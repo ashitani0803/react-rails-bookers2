@@ -37,7 +37,7 @@ function Books() {
     let booksIndex
     booksIndex = books.map((book, index) => {
         return (
-            <tr key={index}>
+            <tr key={book.id}>
                 <td>{book.title}</td>
                 <td>{book.body}</td>
             </tr>
