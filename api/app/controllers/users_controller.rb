@@ -6,9 +6,8 @@ class UsersController < ApplicationController
     end
 
     def update
-        p params[:id]
         @user = User.find(params[:id])
-        if @user.update(user_update_params)
+        if @user.update!(name: params[:name], introduction: params[:introduction], image: params[:image])
             render json: {user: @user}
         else
             render json: {error: @user.errors.messages}
@@ -60,6 +59,6 @@ class UsersController < ApplicationController
     end
 
     def user_update_params
-        params.require(:user).permit(:name, :introduction)
+        params.require(:user).permit(:name, :introduction, :avatar)
     end
 end

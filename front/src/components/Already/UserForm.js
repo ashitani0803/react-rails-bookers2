@@ -3,31 +3,33 @@ import axios from "axios"
 import { useParams, useHistory } from "react-router-dom"
 import TextField from "@material-ui/core/TextField"
 import TextareaAutosize from "@material-ui/core/TextareaAutosize"
+import { responsiveFontSizes } from "@material-ui/core"
 
 function UserForm(props) {
     const [name, setName] = useState(props.currentUser.name)
     const [introduction, setIntroduction] = useState(
-        props.currentUser.introsuction
+        props.currentUser.introduction
     )
+    const [image, setImage] = useState(props.currentUser.image)
 
     const { id } = useParams()
 
     const history = useHistory()
 
+    const createObjectURL =
+        (window.URL || window.webkitURL).createObjectURL ||
+        window.createObjectURL
+
     function handleUpdateUser(e) {
-        console.log(id)
         e.preventDefault()
+        const formData = new FormData()
+        formData.append("name", name)
+        formData.append("introduction", introduction)
+        formData.append("image", image)
         axios
-            .patch(
-                `http://localhost:3000/users/${id}`,
-                {
-                    user: {
-                        name: name,
-                        introduction: introduction,
-                    },
-                },
-                { withCredentials: true }
-            )
+            .patch(`http://localhost:3000/users/${id}`, formData, {
+                withCredentials: true,
+            })
             .then((resp) => {
                 console.log(resp)
                 props.setCurrentUser(resp.data.user)
@@ -48,6 +50,14 @@ function UserForm(props) {
         setIntroduction(e.target.value)
     }
 
+    function handleImageChange(e) {
+        e.preventDefault()
+        // let files = e.target.files
+        // let imageUrl = files.length === 0 ? "" : createObjectURL(files[0])
+
+        setImage(e.target.files[0])
+    }
+
     return (
         <div>
             <h2>User info</h2>
@@ -61,6 +71,16 @@ function UserForm(props) {
                         type='text'
                         value={name}
                         onChange={handleNameChange}
+                    />
+                </div>
+                <div>
+                    <label>Image</label>
+                    {/* {image != undefined && <img src={image} id='user-image' />} */}
+
+                    <input
+                        type='file'
+                        name='image'
+                        onChange={handleImageChange}
                     />
                 </div>
                 <div>

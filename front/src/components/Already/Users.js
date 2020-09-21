@@ -5,6 +5,8 @@ import BookForm from "./BookForm"
 import UserInfo from "./UserInfo"
 
 function Users(props) {
+    const apiUrl = "http://localhost:3000"
+
     const [users, setUsers] = useState([])
 
     useEffect(() => {
@@ -26,11 +28,27 @@ function Users(props) {
 
     let usersIndex
     usersIndex = users.map((user, index) => {
-        return (
+        return user.image.url === null ? (
             <tr key={user.id}>
+                <td>
+                    <img
+                        src={`${apiUrl}/uploads/user/image/0/no-image.png`}
+                        id='user-image'
+                    />
+                </td>
                 <td>{user.name}</td>
                 <td>
                     <Link to={`users/${user.id}`}>Show</Link>
+                </td>
+            </tr>
+        ) : (
+            <tr key={user.id}>
+                <td>
+                    <img src={`${apiUrl}/${user.image.url}`} id='user-image' />
+                </td>
+                <td>{user.name}</td>
+                <td>
+                    <Link to={`/users/${user.id}`}>Show</Link>
                 </td>
             </tr>
         )
@@ -38,15 +56,26 @@ function Users(props) {
 
     return (
         <div>
-            <UserInfo
-                userId={props.userInfo.id}
-                userName={props.userInfo.name}
-                userIntroduction={props.userInfo.introduction}
-            />
+            {props.userInfo.image === undefined ? (
+                <UserInfo
+                    userId={props.userInfo.id}
+                    userName={props.userInfo.name}
+                    userIntroduction={props.userInfo.introduction}
+                    userImage={"uploads/user/image/0/no-image.png"}
+                />
+            ) : (
+                <UserInfo
+                    userId={props.userInfo.id}
+                    userName={props.userInfo.name}
+                    userIntroduction={props.userInfo.introduction}
+                    userImage={props.userInfo.image.url}
+                />
+            )}
             <BookForm />
             <table>
                 <thead>
                     <tr>
+                        <th>image</th>
                         <th>name</th>
                         <th></th>
                     </tr>

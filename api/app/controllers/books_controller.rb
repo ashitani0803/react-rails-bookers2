@@ -1,4 +1,5 @@
 class BooksController < ApplicationController
+    before_action :current_user, only: [:index]
 
     def index
         if params[:id]
@@ -7,7 +8,7 @@ class BooksController < ApplicationController
             render json: {books: @books, user: @user}
         else
             @books = Book.all
-            render json: {books: @books}
+            render json: {books: @books, user: @current_user}
         end
         
     end
