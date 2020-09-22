@@ -7,7 +7,13 @@ class UsersController < ApplicationController
 
     def update
         @user = User.find(params[:id])
-        if @user.update!(name: params[:name], introduction: params[:introduction], image: params[:image])
+        # プロフィール画像がアップロードされなかった場合は画像だけ更新しない
+        if @user == current_user \
+          && params[:image] == "[object Object]" \
+          && @user.update!(name: params[:name], introduction: params[:introduction])
+            render json: {user: @user}
+        elsif @user == current_user \
+          && @user.update!(name: params[:name], introduction: params[:introduction], image: params[:image])
             render json: {user: @user}
         else
             render json: {error: @user.errors.messages}

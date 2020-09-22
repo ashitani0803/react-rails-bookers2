@@ -67,15 +67,11 @@ function Books(props) {
 
     return (
         <div>
-            {user.image === undefined ? (
+            {/* setUserが完了するまではuserは空なのでこの条件式が必要 */}
+            {user.id === undefined ? null : (
                 <UserInfo
-                    userId={props.userInfo.id}
-                    userName={props.userInfo.name}
-                    userIntroduction={props.userInfo.introduction}
-                    userImage={"uploads/user/image/0/no-image.png"}
-                />
-            ) : (
-                <UserInfo
+                    // currentUserIdはログインユーザー以外のユーザーのeditリンクを非表示にする際に必要
+                    currentUserId={props.userInfo.id}
                     userId={user.id}
                     userName={user.name}
                     userIntroduction={user.introduction}

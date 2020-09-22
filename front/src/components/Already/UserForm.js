@@ -6,19 +6,30 @@ import TextareaAutosize from "@material-ui/core/TextareaAutosize"
 import { responsiveFontSizes } from "@material-ui/core"
 
 function UserForm(props) {
-    const [name, setName] = useState(props.currentUser.name)
-    const [introduction, setIntroduction] = useState(
-        props.currentUser.introduction
-    )
-    const [image, setImage] = useState(props.currentUser.image)
+    const [name, setName] = useState("")
+    const [introduction, setIntroduction] = useState("")
+    const [image, setImage] = useState("")
 
     const { id } = useParams()
 
     const history = useHistory()
 
-    const createObjectURL =
-        (window.URL || window.webkitURL).createObjectURL ||
-        window.createObjectURL
+    // const createObjectURL =
+    //     (window.URL || window.webkitURL).createObjectURL ||
+    //     window.createObjectURL
+
+    useEffect(() => {
+        // このif文がないと uncontrolled input のエラーが出る
+        if (props.currentUser.id !== undefined) {
+            if (parseInt(id) !== props.currentUser.id) {
+                history.push(`/users/${props.currentUser.id}`)
+            }
+            setName(props.currentUser.name)
+            setIntroduction(props.currentUser.introduction)
+            setImage(props.currentUser.image)
+        }
+        // ここにprops.currentUserを入れないとフォームに初期値が入らない
+    }, [props.currentUser])
 
     function handleUpdateUser(e) {
         e.preventDefault()
@@ -54,7 +65,6 @@ function UserForm(props) {
         e.preventDefault()
         // let files = e.target.files
         // let imageUrl = files.length === 0 ? "" : createObjectURL(files[0])
-
         setImage(e.target.files[0])
     }
 

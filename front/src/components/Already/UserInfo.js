@@ -1,8 +1,18 @@
 import React from "react"
-import { Link } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 
 function UserInfo(props) {
     const apiUrl = "http://localhost:3000"
+
+    const { id } = useParams()
+
+    function renderUserEditLink(userId) {
+        if (id === undefined || parseInt(id) === userId) {
+            return <Link to={`/users/${userId}/edit`}>Edit</Link>
+        } else {
+            return null
+        }
+    }
 
     return (
         <div>
@@ -22,9 +32,7 @@ function UserInfo(props) {
                     </tr>
                 </tbody>
             </table>
-            <div>
-                <Link to={`/users/${props.userId}/edit`}>Edit</Link>
-            </div>
+            <div>{renderUserEditLink(props.currentUserId)}</div>
         </div>
     )
 }
