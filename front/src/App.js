@@ -11,6 +11,7 @@ import Users from "./components/Already/Users"
 import Books from "./components/Already/Books"
 import Book from "./components/Already/Book"
 import UserForm from "./components/Already/UserForm"
+import BookEdit from "./components/Already/BookEdit"
 import axios from "axios"
 
 function App(props) {
@@ -81,7 +82,11 @@ function App(props) {
                             path='/books'
                             render={() => <Books userInfo={currentUser} />}
                         ></Route>
-                        <Route exact path='/books/:id' component={Book}></Route>
+                        <Route
+                            exact
+                            path='/books/:id'
+                            render={() => <Book currentUser={currentUser} />}
+                        ></Route>
                         <Route
                             exact
                             path='/users/:id/edit'
@@ -90,6 +95,13 @@ function App(props) {
                                     currentUser={currentUser}
                                     setCurrentUser={setCurrentUser}
                                 />
+                            )}
+                        ></Route>
+                        <Route
+                            exact
+                            path='/books/:id/edit'
+                            render={() => (
+                                <BookEdit currentUser={currentUser} />
                             )}
                         ></Route>
                     </Switch>

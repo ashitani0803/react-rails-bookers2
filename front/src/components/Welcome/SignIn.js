@@ -29,7 +29,6 @@ function SignIn(props) {
                     setName("")
                     setPassword("")
                     props.handleSignedIn(resp.data.user)
-                    console.log(history)
                     history.push(`/users/${resp.data.user.id}`)
                 }
             })

@@ -13,7 +13,7 @@ function Books(props) {
 
     useEffect(() => {
         async function getBooksInfo() {
-            if (id === undefined) {
+            if (id === undefined || id === "sign_up" || id === "sign_in") {
                 await axios
                     .get("http://localhost:3000/books", {
                         withCredentials: true,

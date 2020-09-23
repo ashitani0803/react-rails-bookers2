@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react"
-import { useParams, Link } from "react-router-dom"
+import { useParams, useHistory, Link } from "react-router-dom"
 import axios from "axios"
 import BookForm from "./BookForm"
 import UserInfo from "./UserInfo"
 
-function Book() {
+function Book(props) {
     const [book, setBook] = useState({})
     const [user, setUser] = useState({})
 
     const { id } = useParams()
+
+    const history = useHistory()
 
     const apiUrl = "http://localhost:3000"
 
@@ -29,6 +31,85 @@ function Book() {
         }
         getBookInfo()
     }, [])
+
+    function handleDestoryBook(e) {
+        e.preventDefault()
+        if (window.confirm("本当に消しますか？")) {
+            axios
+                .delete(`http://localhost:3000/books/${id}`, {
+                    withCredentials: true,
+                })
+                .then((resp) => {
+                    console.log(resp)
+                    history.push("/books")
+                })
+                .catch((resp) => {
+                    console.log("destroy book error", resp)
+                })
+        }
+    }
+
+    function renderBookLink() {
+        if (user.id === props.currentUser.id) {
+            return (
+                <tr>
+                    <td>
+                        <Link to={`/users/${user.id}`}>
+                            {user.image == undefined ||
+                            user.image.url == null ? (
+                                <img
+                                    src={`${apiUrl}/uploads/user/image/0/no-image.png`}
+                                    id='user-image'
+                                ></img>
+                            ) : (
+                                <img
+                                    src={`${apiUrl}/${user.image.url}`}
+                                    id='user-image'
+                                ></img>
+                            )}
+                            <br />
+                            {user.name}
+                        </Link>
+                    </td>
+                    <td>{book.title}</td>
+                    <td>{book.body}</td>
+                    <td>
+                        <Link to={`/books/${id}/edit`}>Edit</Link>
+                    </td>
+                    <td>
+                        <button onClick={handleDestoryBook}>Destroy</button>
+                    </td>
+                </tr>
+            )
+        } else {
+            return (
+                <tr>
+                    <td>
+                        <Link to={`/users/${user.id}`}>
+                            {user.image == undefined ||
+                            user.image.url == null ? (
+                                <img
+                                    src={`${apiUrl}/uploads/user/image/0/no-image.png`}
+                                    id='user-image'
+                                ></img>
+                            ) : (
+                                <img
+                                    src={`${apiUrl}/${user.image.url}`}
+                                    id='user-image'
+                                ></img>
+                            )}
+                            <br />
+                            {user.name}
+                        </Link>
+                    </td>
+                    <td>{book.title}</td>
+                    <td>{book.body}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            )
+        }
+    }
 
     return (
         <div>
@@ -51,29 +132,7 @@ function Book() {
             <BookForm />
             <h2>Book detail</h2>
             <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <Link to={`/users/${user.id}`}>
-                                {user.image == undefined ? (
-                                    <img
-                                        src={`${apiUrl}/uploads/user/image/0/no-image.png`}
-                                        id='user-image'
-                                    ></img>
-                                ) : (
-                                    <img
-                                        src={`${apiUrl}/${user.image.url}`}
-                                        id='user-image'
-                                    ></img>
-                                )}
-                                <br />
-                                {user.name}
-                            </Link>
-                        </td>
-                        <td>{book.title}</td>
-                        <td>{book.body}</td>
-                    </tr>
-                </tbody>
+                <tbody>{renderBookLink()}</tbody>
             </table>
         </div>
     )

@@ -30,9 +30,18 @@ class BooksController < ApplicationController
     end
 
     def update
+        @book = Book.find(params[:id])
+        if @book.update(book_params)
+            render json: {bok: @book, user: @user}
+        else
+            render json: {error: @book.errors.messages}
+        end
     end
 
     def destroy
+        @book = Book.find(params[:id])
+        @book.destroy
+        render json: {success: "destroy success!"}
     end
 
     private
