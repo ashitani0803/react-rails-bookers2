@@ -22,7 +22,10 @@ class UsersController < ApplicationController
 
     def sign_in
         @user = User.find_by(name: sign_in_params[:name])
-        if @user.authenticate(sign_in_params[:password])
+        if sign_in_params[:name].empty? || sign_in_params[:password].empty? || @user.nil?
+            puts "qqq"
+            render json: {error: "sign in error"}
+        elsif @user.authenticate(sign_in_params[:password])
             log_in(@user)
             render json: {user: @user, status: :signedIn}
         else

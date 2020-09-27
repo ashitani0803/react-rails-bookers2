@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { Link, useHistory } from "react-router-dom"
 import axios from "axios"
-import TextField from "@material-ui/core/TextField"
 
 function SignIn(props) {
     const [name, setName] = useState("")
@@ -24,13 +23,17 @@ function SignIn(props) {
             )
             .then((resp) => {
                 if (resp.data.status === "signedIn") {
-                    console.log(resp)
                     // componentが破棄される前にstateを更新しないといけない
                     setName("")
                     setPassword("")
                     props.handleSignedIn(resp.data.user)
                     history.push(`/users/${resp.data.user.id}`)
+                } else if (resp.data.error) {
+                    console.log(resp.data.error)
                 }
+            })
+            .catch((resp) => {
+                console.log("sign in error", resp)
             })
     }
 
@@ -51,10 +54,9 @@ function SignIn(props) {
                 <div>
                     <label>Name</label>
                     <br />
-                    <TextField
+                    <input
                         id='outlined-basic'
                         label='Outlined'
-                        variant='outlined'
                         name='name'
                         type='text'
                         value={name}
@@ -64,10 +66,9 @@ function SignIn(props) {
                 <div>
                     <label>Password</label>
                     <br />
-                    <TextField
+                    <input
                         id='outlined-basic'
                         label='Outlined'
-                        variant='outlined'
                         name='password'
                         type='password'
                         value={password}

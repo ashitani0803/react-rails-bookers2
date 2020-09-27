@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react"
 import axios from "axios"
 import { useParams, useHistory } from "react-router-dom"
-import TextField from "@material-ui/core/TextField"
-import TextareaAutosize from "@material-ui/core/TextareaAutosize"
+import { useForm } from "react-hook-form"
 
 function BookEdit(props) {
     const [title, setTitle] = useState("")
@@ -11,6 +10,8 @@ function BookEdit(props) {
     const { id } = useParams()
 
     const history = useHistory()
+
+    const { register, errors, handleSubmit } = useForm()
 
     useEffect(() => {
         async function getBookInfo() {
@@ -34,7 +35,7 @@ function BookEdit(props) {
     }, [])
 
     function handleUpdateBook(e) {
-        e.preventDefault()
+        // e.preventDefault()
         axios
             .patch(
                 `http://localhost:3000/books/${id}`,
@@ -68,28 +69,45 @@ function BookEdit(props) {
     return (
         <div>
             <h2>Editing Book</h2>
-            <form onSubmit={handleUpdateBook}>
+            <form onSubmit={handleSubmit(handleUpdateBook)}>
                 <div>
                     <label>Title</label>
-                    <TextField
+                    <input
                         label='Outlined'
                         variant='outlined'
                         name='title'
                         type='text'
                         value={title}
+                        ref={register({ required: "Title can't be blank" })}
                         onChange={handleTitleChange}
                     />
+                    <br />
+                    {errors.title && (
+                        <p className='error-message'>{errors.title.message}</p>
+                    )}
                 </div>
                 <div>
                     <label>Body</label>
-                    <TextareaAutosize
+                    <textarea
                         label='Outlined'
                         variant='outlined'
                         name='body'
                         type='text'
                         value={body}
+                        ref={register({
+                            required: "Body can't be blank",
+                            maxLength: {
+                                value: 200,
+                                message:
+                                    "Body is too long (maximum is 200 characters)",
+                            },
+                        })}
                         onChange={handleBodyChange}
                     />
+                    <br />
+                    {errors.body && (
+                        <p className='error-message'>{errors.body.message}</p>
+                    )}
                 </div>
                 <div>
                     <button>Update Book</button>

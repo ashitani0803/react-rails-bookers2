@@ -27,8 +27,12 @@ function UserInfo(props) {
             <table>
                 <tbody>
                     <tr>
+                        <th>name</th>
                         <th>{props.userName}</th>
-                        <th>{props.userInroduction}</th>
+                    </tr>
+                    <tr>
+                        <th>introduction</th>
+                        <th>{props.userIntroduction}</th>
                     </tr>
                 </tbody>
             </table>

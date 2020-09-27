@@ -1,8 +1,7 @@
 import React, { useState } from "react"
 import { useHistory } from "react-router-dom"
+import { useForm } from "react-hook-form"
 import axios from "axios"
-import TextField from "@material-ui/core/TextField"
-import TextareaAutosize from "@material-ui/core/TextareaAutosize"
 
 function BookForm(props) {
     const [title, setTitle] = useState("")
@@ -10,8 +9,10 @@ function BookForm(props) {
 
     const history = useHistory()
 
+    const { register, errors, handleSubmit } = useForm()
+
     function handleCreateBook(e) {
-        e.preventDefault()
+        // e.preventDefault()
         axios
             .post(
                 "http://localhost:3000/books",
@@ -47,30 +48,45 @@ function BookForm(props) {
     return (
         <div>
             <h2>New Book</h2>
-            <form onSubmit={handleCreateBook}>
+            <form onSubmit={handleSubmit(handleCreateBook)}>
                 <div>
                     <label>Title</label>
                     <br />
-                    <TextField
-                        label='Outlined'
-                        variant='outlined'
+                    <input
+                        label='title'
                         name='title'
                         type='text'
                         value={title}
+                        ref={register({ required: "Title can't be blank" })}
                         onChange={handleTitleChange}
                     />
+                    <br />
+                    {errors.title && (
+                        <p className='error-message'>{errors.title.message}</p>
+                    )}
                 </div>
                 <div>
                     <label>Body</label>
                     <br />
-                    <TextareaAutosize
-                        label='Outlined'
-                        variant='outlined'
+                    <textarea
+                        label='body'
                         name='body'
                         type='text'
                         value={body}
+                        ref={register({
+                            required: "Body can't be blank",
+                            maxLength: {
+                                value: 200,
+                                message:
+                                    "Body is too long (maximum is 200 characters)",
+                            },
+                        })}
                         onChange={handleBodyChange}
                     />
+                    <br />
+                    {errors.body && (
+                        <p className='error-message'>{errors.body.message}</p>
+                    )}
                 </div>
                 <div>
                     <button>Create Book</button>

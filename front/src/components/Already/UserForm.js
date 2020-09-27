@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react"
 import axios from "axios"
 import { useParams, useHistory } from "react-router-dom"
-import TextField from "@material-ui/core/TextField"
-import TextareaAutosize from "@material-ui/core/TextareaAutosize"
+import { useForm } from "react-hook-form"
 import { responsiveFontSizes } from "@material-ui/core"
 
 function UserForm(props) {
@@ -13,6 +12,8 @@ function UserForm(props) {
     const { id } = useParams()
 
     const history = useHistory()
+
+    const { register, errors, handleSubmit } = useForm()
 
     // const createObjectURL =
     //     (window.URL || window.webkitURL).createObjectURL ||
@@ -25,14 +26,18 @@ function UserForm(props) {
                 history.push(`/users/${props.currentUser.id}`)
             }
             setName(props.currentUser.name)
-            setIntroduction(props.currentUser.introduction)
             setImage(props.currentUser.image)
+            if (props.currentUser.introduction === null) {
+                setIntroduction("")
+            } else {
+                setIntroduction(props.currentUser.introduction)
+            }
         }
         // ここにprops.currentUserを入れないとフォームに初期値が入らない
     }, [props.currentUser])
 
     function handleUpdateUser(e) {
-        e.preventDefault()
+        // e.preventDefault()
         const formData = new FormData()
         formData.append("name", name)
         formData.append("introduction", introduction)
@@ -71,17 +76,29 @@ function UserForm(props) {
     return (
         <div>
             <h2>User info</h2>
-            <form onSubmit={handleUpdateUser}>
+            <form onSubmit={handleSubmit(handleUpdateUser)}>
                 <div>
                     <label>Name</label>
-                    <TextField
+                    <input
                         label='Outlined'
-                        variant='outlined'
                         name='name'
                         type='text'
                         value={name}
+                        ref={register({
+                            required: "Name can't be blank",
+
+                            minLength: {
+                                value: 2,
+                                message:
+                                    "Name is too short (minimum is 2 characters)",
+                            },
+                        })}
                         onChange={handleNameChange}
                     />
+                    <br />
+                    {errors.name && (
+                        <p className='error-message'>{errors.name.message}</p>
+                    )}
                 </div>
                 <div>
                     <label>Image</label>
@@ -95,14 +112,26 @@ function UserForm(props) {
                 </div>
                 <div>
                     <label>Introduction</label>
-                    <TextareaAutosize
+                    <textarea
                         label='Outlined'
-                        variant='outlined'
                         name='introduction'
                         type='text'
                         value={introduction}
+                        ref={register({
+                            maxLength: {
+                                value: 50,
+                                message:
+                                    "Introduction is too long (maximum is 50 characters)",
+                            },
+                        })}
                         onChange={handleIntroductionChange}
                     />
+                    <br />
+                    {errors.introduction && (
+                        <p className='error-message'>
+                            {errors.introduction.message}
+                        </p>
+                    )}
                 </div>
                 <div>
                     <button>Update User</button>
